@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<layout>
+    <catalog_product_view> 
+        <reference name="head">
+            <action method="addCss" ifconfig="catalog/raloption/enable_css"><stylesheet>css/raloption/common.css</stylesheet></action>
+            <action method="addCss" ifconfig="catalog/raloption/enable_fancybox"><stylesheet>css/raloption/jquery.fancybox.css</stylesheet></action>
+            <action method="addCss" ifconfig="catalog/raloption/enable_fancybox"><stylesheet>css/raloption/jquery.fancybox-buttons.css</stylesheet></action>
+            <action method="addJs" ifconfig="catalog/raloption/enable_jquery"><script>raloption/jquery-1.8.3.min.js</script></action>
+            <action method="addJs"><script>raloption/raloption.js</script></action>
+            <action method="addItem" ifconfig="catalog/raloption/enable_fancybox"><type>skin_js</type><script>js/raloption/jquery.fancybox.pack.js</script></action>
+            <action method="addItem" ifconfig="catalog/raloption/enable_fancybox"><type>skin_js</type><script>js/raloption/jquery.fancybox-buttons.js</script></action>
+        </reference>
+    </catalog_product_view> 
+</layout>

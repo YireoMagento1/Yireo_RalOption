@@ -1,0 +1,67 @@
+<?php
+/**
+ * RalOption plugin for Magento 
+ *
+ * @package     Yireo_RalOption
+ * @author      Yireo
+ * @copyright   Copyright (c) 2012 Yireo (http://www.yireo.com/)
+ * @license     Open Software License
+ */
+?>
+<?php $_option = $this->getOption(); ?>
+<?php $_product = Mage::registry('current_product'); ?>
+<?php $_ralCodesArray = $this->getRalCodesArray(); ?>
+<?php $_ralCodesMatrix = $this->getRalCodesMatrix(); ?>
+<?php $_defaultValue = $_option->getDefaultValue(); ?>
+<?php $_defaultPrice = Mage::helper('raloption')->getProductPriceByCode($_defaultValue, $_product); ?>
+<?php $_defaultColor = $_option->getDefaultColor(); ?>
+<?php $_optionId = 'options_'.$_option->getId().'_text'; ?>
+<dt>
+    <label<?php if ($_option->getIsRequire()) echo ' class="required"' ?>><?php if ($_option->getIsRequire()) echo '<em>*</em>' ?><?php echo  $this->htmlEscape($_option->getTitle()) ?></label>
+</dt>
+<dd<?php if ($_option->decoratedIsLast){?> class="last"<?php }?>>
+    <div class="input-box raloption-input-box">
+        <?php $classes = array(); ?>
+        <?php $classes[] = 'product-custom-option'; ?>
+        <?php if($_option->getIsRequire()) $classes[] = 'required-entry'; ?>
+        <div id="<?php echo $_optionId ?>_box" style="background-color: #<?php echo $_defaultColor; ?>"></div>
+        <input type="text" onchange="raloptionCheckValue(this);" id="<?php echo $_optionId ?>" class="<?php echo implode(' ', $classes); ?>" name="options[<?php echo $_option->getId()
+?>]" value="<?php echo $this->escapeHtml($_defaultValue) ?>" price="<?php echo $_defaultPrice; ?>" />
+        <button type="button" onClick="jQuery.fancybox.open([{href: '#raloption-colorpicker'}]);" title="<?php echo $this->__('Select'); ?>" class="button"><span><span><?php echo $this->__('Select'); ?></span></span></button>
+    </div>
+    <div style="clear:both"></div>
+</dd>
+<div id="raloption-colorpicker" style="display:none;">
+    <p class="disclaimer">
+        <?php echo $this->getDisclaimer(); ?>
+    </p>
+    <ul>
+        <?php foreach($_ralCodesMatrix as $ralCode => $ralColor) { ?>
+        <li>
+            <?php if(empty($ralColor)) $ralColor = 'ffffff'; ?>
+            <?php $ralPrice = Mage::helper('raloption')->getProductPriceByCode($ralCode, $_product); ?>
+            <?php $classes = array('box'); ?>
+            <?php if($ralPrice != 0) $classes[] = 'box-discount'; ?>
+            <?php $styles = array(); ?>
+            <?php $styles[] = 'background-color: #'.strtolower($ralColor); ?>
+            <?php $styles[] = 'color: '.Mage::helper('raloption')->getOppositeColor($ralColor); ?>
+            <div class="<?php echo implode(' ', $classes); ?>" style="<?php echo implode('; ', $styles); ?>" onClick="setRalOption('<?php echo $ralCode; ?>','<?php 
+                echo $ralColor; ?>','<?php echo $ralPrice; ?>');return false;">
+                <a href="#" style="color:inherit;">RAL<?php echo $ralCode; ?></a>
+                <?php if($ralPrice != 0): ?><br/><span class="price"><?php echo Mage::helper('core')->currency($ralPrice); ?></span><?php endif; ?>
+                <br/><span class="color"><?php echo $ralColor; ?></span>
+            </div>
+        </li>
+        <?php } ?>
+    </ul>
+</div>
+
+<script type="text/javascript">
+var ralCodes = [ <?php echo implode(', ', $_ralCodesArray); ?> ]; 
+var optionId = '<?php echo $_optionId; ?>';
+
+jQuery(document).ready(function() {
+    setRalOption('<?php echo $_defaultValue; ?>', '<?php echo $_defaultColor; ?>', '<?php echo $_defaultPrice; ?>');
+    jQuery(".fancybox").fancybox({'openSpeed':200, 'closeSpeed':200});
+});
+</script>
