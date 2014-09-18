@@ -15,22 +15,22 @@ p.disclaimer {
     padding: 5px;
 }
 
-#raloption-colorpicker {
+.raloption-colorpicker {
     width: 600px;
 }
-#raloption-colorpicker:after {
+.raloption-colorpicker:after {
     clear: both;
 }
-#raloption-colorpicker ul {
+.raloption-colorpicker ul {
     list-style: none;
 }
-#raloption-colorpicker ul li {
+.raloption-colorpicker ul li {
     float: left;
     padding: 2px;
     width: 90px;
 }
 
-#raloption-colorpicker ul li div.box {
+.raloption-colorpicker ul li div.box {
     background-color: white;
     border: 1px solid black;
     width: 100%;
@@ -40,20 +40,16 @@ p.disclaimer {
     cursor: pointer;
 }
 
-#raloption-colorpicker ul li div.box-discount {
-    border: 1px solid red;
-}
-
-#raloption-colorpicker ul li div.box a {
+.raloption-colorpicker ul li div.box a {
     font-weight: bold;
     text-decoration: none;
 }
 
-#raloption-colorpicker ul li div.box span.color {
+.raloption-colorpicker ul li div.box span.color {
     font-size: 80%;
 }
 
-#raloption-colorpicker ul li div.box span.price {
+.raloption-colorpicker ul li div.box span.price {
     font-weight: bold;
 }
 
