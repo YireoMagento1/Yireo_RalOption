@@ -21,7 +21,7 @@ $installer->addAttribute('catalog_product', 'raloption_palette', array(
     'class'             => '',
     'source'            => 'raloption/backend_source_palette',
     'global'            => Mage_Catalog_Model_Resource_Eav_Attribute::SCOPE_GLOBAL,
-    'visible'           => false,
+    'visible'           => true,
     'required'          => false,
     'user_defined'      => false,
     'default'           => '0',
