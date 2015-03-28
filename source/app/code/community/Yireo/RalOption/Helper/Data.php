@@ -134,6 +134,10 @@ class Yireo_RalOption_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getPriceByCode($code, $originalPrice, $differenceOnly = true)
     {
+        if (is_object($originalPrice)) {
+            $originalPrice = $originalPrice->getPrice();
+        }
+
         $priceRules = self::getPriceRules();
         if(empty($priceRules)) {
             if($differenceOnly == true) {

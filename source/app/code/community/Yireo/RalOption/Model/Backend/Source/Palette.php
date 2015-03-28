@@ -9,7 +9,7 @@
  * @license     Open Source License (OSL v3)
  */
 
-class Yireo_RalOption_Model_Backend_Source_Palette
+class Yireo_RalOption_Model_Backend_Source_Palette extends Mage_Eav_Model_Entity_Attribute_Source_Table
 {
     /**
      * Options getter
@@ -69,7 +69,7 @@ class Yireo_RalOption_Model_Backend_Source_Palette
      *
      * @return array
      */
-    static public function getAllOptions()
+    public function getAllOptions()
     {
         $options = self::_toOptionArray();
         array_unshift($options, array('value'=>'', 'label'=>''));
