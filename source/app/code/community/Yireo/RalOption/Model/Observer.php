@@ -10,10 +10,9 @@
 
 class Yireo_RalOption_Model_Observer
 {
-    /*
+    /**
      * Listen to the event core_block_abstract_to_html_before
-     * 
-     * @access public
+     *
      * @parameter Varien_Event_Observer $observer
      * @return $this
      */
@@ -95,10 +94,9 @@ class Yireo_RalOption_Model_Observer
         return $this;
     }
 
-    /*
+    /**
      * Listen to the event core_block_abstract_to_html_after
-     * 
-     * @access public
+     *
      * @parameter Varien_Event_Observer $observer
      * @return $this
      */

@@ -10,10 +10,9 @@
 
 class Yireo_RalOption_Helper_Data extends Mage_Core_Helper_Abstract
 {
-    /*
+    /**
      * Helper-method to fetch a specific value from the Magento Configuration
-     * 
-     * @access public
+     *
      * @parameter string $key
      * @parameter mixed $default_value
      * @return mixed
@@ -25,10 +24,9 @@ class Yireo_RalOption_Helper_Data extends Mage_Core_Helper_Abstract
         return $value;
     }
 
-    /*
+    /**
      * Helper-method to get the opposite-color based on color-contrast
-     * 
-     * @access public
+     *
      * @parameter string $color
      * @parameter string $dark
      * @parameter string $light
@@ -40,10 +38,9 @@ class Yireo_RalOption_Helper_Data extends Mage_Core_Helper_Abstract
         return (hexdec($color) > 0xffffff/2) ? $dark : $light;
     }
 
-    /*
+    /**
      * Helper-method to get the palette helper
-     * 
-     * @access public
+     *
      * @parameter null
      * @return array
      */
@@ -57,10 +54,9 @@ class Yireo_RalOption_Helper_Data extends Mage_Core_Helper_Abstract
         return $helper;
     }
 
-    /*
+    /**
      * Helper-method to get the configured color-palette
-     * 
-     * @access public
+     *
      * @parameter null
      * @return array
      */
@@ -77,10 +73,9 @@ class Yireo_RalOption_Helper_Data extends Mage_Core_Helper_Abstract
         return array();
     }
 
-    /*
+    /**
      * Helper-method to fetch a color by RAL-code
-     * 
-     * @access public
+     *
      * @parameter string $code
      * @return string
      */
@@ -93,10 +88,9 @@ class Yireo_RalOption_Helper_Data extends Mage_Core_Helper_Abstract
         return null;
     }
 
-    /*
+    /**
      * Helper-method to fetch a RAL-code by color
-     * 
-     * @access public
+     *
      * @parameter string $color
      * @return string
      */
@@ -106,10 +100,9 @@ class Yireo_RalOption_Helper_Data extends Mage_Core_Helper_Abstract
         return array_search($color, $codes);
     }
 
-    /*
+    /**
      * Helper-method to get the configured price-rules
-     * 
-     * @access public
+     *
      * @parameter null
      * @return array
      */
@@ -123,10 +116,9 @@ class Yireo_RalOption_Helper_Data extends Mage_Core_Helper_Abstract
         return array();
     }
 
-    /*
+    /**
      * Get a specific price for a specific RAL-code
-     * 
-     * @access public
+     *
      * @parameter string $code
      * @parameter int $originalPrice
      * @parameter boolean $differenceOnly
@@ -166,10 +158,9 @@ class Yireo_RalOption_Helper_Data extends Mage_Core_Helper_Abstract
         return $newPrice;
     }
     
-    /*
+    /**
      * Get a specific price for a specific RAL-code
-     * 
-     * @access public
+     *
      * @parameter string $code
      * @parameter Mage_Catalog_Model_Product $product
      * @parameter boolean $differenceOnly
@@ -181,10 +172,9 @@ class Yireo_RalOption_Helper_Data extends Mage_Core_Helper_Abstract
         return self::getPriceByCode($code, $price, $differenceOnly);
     }
 
-    /*
+    /**
      * Get the final price for a specific product
-     * 
-     * @access public
+     *
      * @parameter Mage_Catalog_Model_Product $price
      * @return string
      */

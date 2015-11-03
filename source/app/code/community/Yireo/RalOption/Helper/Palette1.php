@@ -10,10 +10,9 @@
 
 class Yireo_RalOption_Helper_Palette1 extends Mage_Core_Helper_Abstract
 {
-    /*
+    /**
      * Helper-method to return the palette-codes
-     * 
-     * @access public
+     *
      * @parameter null
      * @return array
      */
@@ -234,10 +233,9 @@ class Yireo_RalOption_Helper_Palette1 extends Mage_Core_Helper_Abstract
         );
     }
 
-    /*
+    /**
      * Helper-method to return the palette-codes
-     * 
-     * @access public
+     *
      * @parameter null
      * @return array
      */
@@ -252,10 +250,9 @@ class Yireo_RalOption_Helper_Palette1 extends Mage_Core_Helper_Abstract
         );
     }
 
-    /*
+    /**
      * Helper-method to return the default color (not value)
-     * 
-     * @access public
+     *
      * @parameter null
      * @return array
      */
