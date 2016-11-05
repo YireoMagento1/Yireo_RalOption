@@ -3,8 +3,8 @@
  * RalOption plugin for Magento 
  *
  * @package     Yireo_RalOption
- * @author      Yireo (http://www.yireo.com/)
- * @copyright   Copyright 2015 Yireo (http://www.yireo.com/)
+ * @author      Yireo (https://www.yireo.com/)
+ * @copyright   Copyright 2015 Yireo (https://www.yireo.com/)
  * @license     Open Source License (OSL v3)
  */
 
@@ -47,7 +47,7 @@ class Yireo_RalOption_Helper_Data extends Mage_Core_Helper_Abstract
     public function getHelper($helperName = null)
     {
         if(empty($helperName)) {
-            $helperName = self::getConfigValue('catalog/raloption/palette');
+            $helperName = $this->getConfigValue('catalog/raloption/palette');
         }
 
         $helper = Mage::helper('raloption/'.$helperName);
@@ -63,7 +63,7 @@ class Yireo_RalOption_Helper_Data extends Mage_Core_Helper_Abstract
     public function getCodes($helperName = null)
     {
         if(empty($helperName)) {
-            $helperName = self::getConfigValue('catalog/raloption/palette');
+            $helperName = $this->getConfigValue('catalog/raloption/palette');
         }
 
         $helper = Mage::helper('raloption/'.$helperName);
@@ -81,7 +81,7 @@ class Yireo_RalOption_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getColorByCode($code = null)
     {
-        $codes = self::getCodes();
+        $codes = $this->getCodes();
         if(isset($codes[$code])) {
             return $codes[$code];
         }
@@ -96,7 +96,7 @@ class Yireo_RalOption_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getCodeByColor($color = null)
     {
-        $codes = self::getCodes();
+        $codes = $this->getCodes();
         return array_search($color, $codes);
     }
 
@@ -108,7 +108,7 @@ class Yireo_RalOption_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getPriceRules()
     {
-        $helperName = self::getConfigValue('catalog/raloption/palette');
+        $helperName = $this->getConfigValue('catalog/raloption/palette');
         $helper = Mage::helper('raloption/'.$helperName);
         if(method_exists($helper, 'getPriceRules')) {
             return $helper->getPriceRules();
@@ -130,7 +130,7 @@ class Yireo_RalOption_Helper_Data extends Mage_Core_Helper_Abstract
             $originalPrice = $originalPrice->getPrice();
         }
 
-        $priceRules = self::getPriceRules();
+        $priceRules = $this->getPriceRules();
         if(empty($priceRules)) {
             if($differenceOnly == true) {
                 return 0;
@@ -168,8 +168,8 @@ class Yireo_RalOption_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getProductPriceByCode($code, $product, $differenceOnly = true)
     {
-        $price = self::getProductPrice($product);
-        return self::getPriceByCode($code, $price, $differenceOnly);
+        $price = $this->getProductPrice($product);
+        return $this->getPriceByCode($code, $price, $differenceOnly);
     }
 
     /**
