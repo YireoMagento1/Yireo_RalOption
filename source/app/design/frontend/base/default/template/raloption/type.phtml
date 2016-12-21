@@ -1,74 +1,132 @@
 <?php
 /**
- * RalOption plugin for Magento 
+ * RalOption plugin for Magento
  *
  * @package     Yireo_RalOption
  * @author      Yireo
- * @copyright   Copyright (c) 2012 Yireo (http://www.yireo.com/)
+ * @copyright   Copyright (c) 2016 Yireo (https://www.yireo.com/)
  * @license     Open Software License
  */
+
+/** @var Mage_Catalog_Block_Product_View_Options_Type_Text $this */
+
+/** @var Mage_Catalog_Model_Product_Option $option */
+$option = $this->getOption();
+
+/** @var Mage_Catalog_Model_Product $product */
+$product = Mage::registry('current_product');
+
+$ralCodesArray = $this->getRalCodesArray();
+$ralCodesMatrix = $this->getRalCodesMatrix();
+$defaultValue = $option->getDefaultValue();
+$defaultPrice = Mage::helper('raloption')->getPriceByCode($defaultValue, $product);
+$defaultColor = $option->getDefaultColor();
+$optionId = 'options_' . $option->getId() . '_text';
+$optionRequiredText = ($option->getIsRequire()) ? '<em>*</em>' : '';
+
+/** @var Yireo_RalOption_Helper_Data $helper */
+$helper = Mage::helper('raloption');
+
+/** @var Mage_Core_Helper_Data $coreHelper */
+$coreHelper = Mage::helper('core');
 ?>
-<?php $_option = $this->getOption(); ?>
-<?php $_product = Mage::registry('current_product'); ?>
-<?php $_ralCodesArray = $this->getRalCodesArray(); ?>
-<?php $_ralCodesMatrix = $this->getRalCodesMatrix(); ?>
-<?php $_defaultValue = $_option->getDefaultValue(); ?>
-<?php $_defaultPrice = Mage::helper('raloption')->getPriceByCode($_defaultValue, $_product); ?>
-<?php $_defaultColor = $_option->getDefaultColor(); ?>
-<?php $_optionId = 'options_'.$_option->getId().'_text'; ?>
 <dt>
-    <label<?php if ($_option->getIsRequire()) echo ' class="required"' ?>><?php if ($_option->getIsRequire()) echo '<em>*</em>' ?><?php echo  $this->htmlEscape($_option->getTitle()) ?></label>
+    <label<?php if ($option->getIsRequire()) echo ' class="required"' ?>>
+        <?= $optionRequiredText ?><?= $this->htmlEscape($option->getTitle()) ?>
+    </label>
 </dt>
-<dd<?php if ($_option->decoratedIsLast){?> class="last"<?php }?>>
+
+<dd<?php if ($option->decoratedIsLast) { ?> class="last"<?php } ?>>
     <div class="input-box raloption-input-box">
         <?php $classes = array(); ?>
         <?php $classes[] = 'product-custom-option'; ?>
-        <?php if($_option->getIsRequire()) $classes[] = 'required-entry'; ?>
-        <div id="<?php echo $_optionId ?>_box" style="background-color: #<?php echo $_defaultColor; ?>"></div>
-        <input type="text" onchange="raloptionCheckValue(this);" id="<?php echo $_optionId ?>" class="<?php echo implode(' ', $classes); ?>" name="options[<?php echo $_option->getId()
-?>]" value="<?php echo $this->escapeHtml($_defaultValue) ?>" price="<?php echo $_defaultPrice; ?>" />
-        <button type="button" onClick="jQuery.fancybox.open([{href: '#raloption-colorpicker-<?php echo $_optionId; ?>'}]);" title="<?php echo $this->__('Select'); ?>" class="button"><span><span><?php echo $this->__('Select'); ?></span></span></button>
+        <?php if ($option->getIsRequire()) $classes[] = 'required-entry'; ?>
+        <a href="#" class="raloption-link-<?= $optionId ?>" data-modal="#raloption-colorpicker-<?= $optionId; ?>">
+            <div id="<?= $optionId ?>_box" style="background-color: #<?= $defaultColor; ?>"></div>
+        </a>
+
+        <input type="text" onchange="raloptionCheckValue(this);" id="<?= $optionId ?>"
+               class="<?= implode(' ', $classes); ?>" name="options[<?= $option->getId()
+        ?>]" value="<?= $this->escapeHtml($defaultValue) ?>" price="<?= $defaultPrice; ?>"/>
+
+        <button type="button" data-modal="#raloption-colorpicker-<?= $optionId; ?>"
+                id="raloption-button-<?= $optionId ?>" title="<?= $this->__('Select'); ?>" class="button">
+            <span><span><?= $this->__('Select'); ?></span></span>
+        </button>
     </div>
     <div style="clear:both"></div>
 </dd>
-<div id="raloption-colorpicker-<?php echo $_optionId; ?>" class="raloption-colorpicker" style="display:none;">
+
+<div id="raloption-colorpicker-<?= $optionId; ?>" class="raloption-colorpicker" style="display:none;">
     <p class="disclaimer">
-        <?php echo $this->getDisclaimer(); ?>
+        <?= $this->getDisclaimer(); ?>
     </p>
     <ul>
-        <?php foreach($_ralCodesMatrix as $ralCode => $ralColor) { ?>
-        <li>
-            <?php if(empty($ralColor)) $ralColor = 'ffffff'; ?>
-            <?php $ralPrice = Mage::helper('raloption')->getPriceByCode($ralCode, $_product); ?>
-            <?php $styles = array(); ?>
-            <?php $styles[] = 'background-color: #'.strtolower($ralColor); ?>
-            <?php $styles[] = 'color: '.Mage::helper('raloption')->getOppositeColor($ralColor); ?>
-            <div class="box" style="<?php echo implode('; ', $styles); ?>" onClick="setRalOption('<?php echo $ralCode; ?>','<?php echo $ralColor; ?>','<?php echo $ralPrice; ?>', '<?php echo $_optionId; ?>');return false;">
-                <a href="#" style="color:inherit;">RAL<?php echo $ralCode; ?></a>
-                <?php if($ralPrice != 0): ?><br/><span class="price"><?php echo Mage::helper('core')->currency($ralPrice); ?></span><?php endif; ?>
-                <br/><span class="color"><?php echo $ralColor; ?></span>
-            </div>
-        </li>
+        <?php foreach ($ralCodesMatrix as $ralCode => $ralColor) { ?>
+            <li>
+                <?php if (empty($ralColor)) $ralColor = 'ffffff'; ?>
+                <?php $ralPrice = $helper->getPriceByCode($ralCode, $product); ?>
+                <?php $styles = array(); ?>
+                <?php $styles[] = 'background-color: #' . strtolower($ralColor); ?>
+                <?php $styles[] = 'color: ' . $helper->getOppositeColor($ralColor); ?>
+                <a href="#" class="raloption-box"
+                   data-raloption-code="<?= $ralCode ?>"
+                   data-raloption-color="<?= $ralColor ?>"
+                   data-raloption-price="<?= $ralPrice ?>"
+                   data-raloption-optionId="<?= $optionId ?>"
+                >
+                <div class="box " style="<?= implode('; ', $styles); ?>">
+                    <span class="title">RAL<?= $ralCode; ?></span>
+                    <?php if ($ralPrice != 0): ?>
+                        <br/><span class="price"><?= $coreHelper->currency($ralPrice); ?></span>
+                    <?php endif; ?>
+                    <br/><span class="color"><?= $ralColor; ?></span>
+                </div>
+                </a>
+            </li>
         <?php } ?>
     </ul>
 </div>
 
 <script type="text/javascript">
-var ralCodes = [ <?php echo implode(', ', $_ralCodesArray); ?> ]; 
-function setRalOption(ralCode, colorCode, ralPrice, optionId) {
+    var ralCodes = [ <?= implode(', ', $ralCodesArray); ?> ];
+    RalOption.setCodes(ralCodes);
 
-    jQuery('#' + optionId).data('price', ralPrice);
-    jQuery('#' + optionId).val(ralCode);
-    jQuery('#' + optionId + '_box').css('backgroundColor', '#' + colorCode);
-    jQuery.fancybox.close();
+    (function ($) {
+            $(function () {
+                RalOption.change('<?= $defaultValue; ?>', '<?= $defaultColor; ?>', '<?= $defaultPrice; ?>', '<?= $optionId ?>');
+                $(".fancybox").fancybox({'openSpeed': 200, 'closeSpeed': 200});
 
-    optionsPrice.changePrice('price', ralPrice);
-    optionsPrice.changePrice('oldPrice', '0');
-    optionsPrice.reload();
-}
 
-jQuery(document).ready(function() {
-    setRalOption('<?php echo $_defaultValue; ?>', '<?php echo $_defaultColor; ?>', '<?php echo $_defaultPrice; ?>');
-    jQuery(".fancybox").fancybox({'openSpeed':200, 'closeSpeed':200});
-});
+            $(".raloption-box").click(function (event) {
+                $currentElement = $(event.target);
+
+                if (event.target.nodeName !== 'A') {
+                    $currentElement = $currentElement.parents('a');
+                }
+
+                code = $currentElement.attr('data-raloption-code');
+                color = $currentElement.attr('data-raloption-color');
+                price = $currentElement.attr('data-raloption-price');
+                optionId = $currentElement.attr('data-raloption-optionId');
+
+                RalOption.change(code, color, price, optionId);
+            });
+
+            $("#raloption-button-<?= $optionId ?>").click(function (e) {
+                $currentElement = $(e.target);
+                modalTarget = RalOptionGetModalFromElement($currentElement, 'button');
+
+                jQuery.fancybox.open([{href: '#' + modalTarget}]);
+            });
+
+            $(".raloption-link-<?= $optionId ?>").click(function (e) {
+                $currentElement = $(e.target);
+                modalTarget = RalOptionGetModalFromElement($currentElement, 'a');
+                jQuery.fancybox.open([{href: '#' + modalTarget}]);
+            });
+                        });
+        }
+        (jQuery)
+    );
 </script>

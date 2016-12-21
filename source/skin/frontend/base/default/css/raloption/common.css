@@ -3,7 +3,7 @@
  *
  * @package     Yireo_RalOption
  * @author      Yireo
- * @copyright   Copyright 2015 Yireo (https://www.yireo.com/)
+ * @copyright   Copyright 2016 Yireo (https://www.yireo.com/)
  * @license     Open Software License
  */
 
@@ -18,29 +18,37 @@ p.disclaimer {
 .raloption-colorpicker {
     width: 600px;
 }
+
 .raloption-colorpicker:after {
     clear: both;
 }
+
 .raloption-colorpicker ul {
     list-style: none;
 }
+
 .raloption-colorpicker ul li {
     float: left;
     padding: 2px;
-    width: 90px;
+    width: 100px;
+    height: 100px;
+}
+
+.raloption-colorpicker ul li a:hover {
+    text-decoration: none;
 }
 
 .raloption-colorpicker ul li div.box {
     background-color: white;
     border: 1px solid black;
     width: 100%;
+    height: 100%;
     padding-top: 22px;
     text-align: center;
-    height: 60px;
     cursor: pointer;
 }
 
-.raloption-colorpicker ul li div.box a {
+.raloption-colorpicker ul li div.box span.title {
     font-weight: bold;
     text-decoration: none;
 }
@@ -54,7 +62,7 @@ p.disclaimer {
 }
 
 .raloption-input-box div {
-    float:left;
+    float: left;
     background-color: white;
     border: 1px solid black;
     width: 30px;
@@ -63,13 +71,13 @@ p.disclaimer {
 }
 
 .raloption-input-box input {
-    float:left;
+    float: left;
     padding: 5px;
     width: 50px;
 }
 
 .raloption-input-box button {
-    float:left;
+    float: left;
     color: white;
     padding: 5px;
 }

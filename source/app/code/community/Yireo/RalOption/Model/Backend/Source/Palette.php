@@ -1,14 +1,14 @@
 <?php
+
 /**
- * RalOption plugin for Magento 
+ * RalOption plugin for Magento
  *
  * @category    design_default
  * @package     Yireo_RalOption
  * @author      Yireo (https://www.yireo.com/)
- * @copyright   Copyright 2015 Yireo (https://www.yireo.com/)
+ * @copyright   Copyright 2016 Yireo (https://www.yireo.com/)
  * @license     Open Source License (OSL v3)
  */
-
 class Yireo_RalOption_Model_Backend_Source_Palette extends Mage_Eav_Model_Entity_Attribute_Source_Table
 {
     /**
@@ -18,44 +18,34 @@ class Yireo_RalOption_Model_Backend_Source_Palette extends Mage_Eav_Model_Entity
      */
     public function toOptionArray()
     {
-        return self::_toOptionArray();
+        $helper = $this->getHelper();
+        $palettes = $helper->getAutoDetectedPalettes();
+        $palettes = array_merge($palettes, $helper->getPalettesFromEvent());
+
+        $options = [];
+
+        foreach ($palettes as $palette) {
+            $label = get_class($palette);
+            $value = get_class($palette);
+            $options[] = array('value' => $value, 'label' => $label);
+        }
+
+        return $options;
     }
 
     /**
-     * Options getter (static)
-     *
-     * @return array
+     * @return Yireo_RalOption_Helper_Palette
      */
-    static public function _toOptionArray()
+    public function getHelper()
     {
-        $paths = array(
-            BP.DS.'app'.DS.'code'.DS.'local'.DS.'Yireo'.DS.'RalOption'.DS.'Helper'.DS,
-            BP.DS.'app'.DS.'code'.DS.'community'.DS.'Yireo'.DS.'RalOption'.DS.'Helper'.DS,
-        );
-
-        $helpers = array();
-        foreach($paths as $path) {
-            if(is_dir($path)) {
-                if($handle = opendir($path)) {
-                    while(($file = readdir($handle)) !== false) {
-                        if(is_file($path.$file) && preg_match('/^Palette([0-9]+)\.php/', $file, $match)) {
-                            $value = strtolower(preg_replace('/\.php$/', '', $file));
-                            $label = Mage::helper('raloption')->__('Palette').' '.$match[1];
-                            $helpers[] = array('value' => $value, 'label'=> $label);
-                        }
-                    }
-                    closedir($handle);
-                }
-            }
-        }
-
-        return $helpers;
+        return Mage::helper('raloption/palette');
     }
 
     /**
      * Set attribute instance
      *
      * @param Mage_Catalog_Model_Resource_Eav_Attribute $attribute
+     *
      * @return Mage_Eav_Model_Entity_Attribute_Frontend_Abstract
      */
     public function setAttribute($attribute)
@@ -67,12 +57,19 @@ class Yireo_RalOption_Model_Backend_Source_Palette extends Mage_Eav_Model_Entity
     /**
      * Retrieve option array with empty value
      *
+     * @param $withEmpty bool
+     * @param $defaultValues bool
+     *
      * @return array
      */
-    public function getAllOptions()
+    public function getAllOptions($withEmpty = true, $defaultValues = false)
     {
-        $options = self::_toOptionArray();
-        array_unshift($options, array('value'=>'', 'label'=>''));
+        $options = $this->toOptionArray();
+
+        if ($withEmpty) {
+            array_unshift($options, array('value' => '', 'label' => ''));
+        }
+
         return $options;
     }
 }

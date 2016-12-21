@@ -8,12 +8,11 @@
  * @license     Open Source License (OSL v3)
  */
 
-class Yireo_RalOption_Helper_Palette1 extends Mage_Core_Helper_Abstract
+class Yireo_RalOption_Palette_Palette1 implements Yireo_RalOption_Api_PaletteInterface
 {
     /**
      * Helper-method to return the palette-codes
      *
-     * @parameter null
      * @return array
      */
     public function getCodes()
@@ -236,7 +235,6 @@ class Yireo_RalOption_Helper_Palette1 extends Mage_Core_Helper_Abstract
     /**
      * Helper-method to return the palette-codes
      *
-     * @parameter null
      * @return array
      */
     public function getPriceRules()
@@ -253,8 +251,7 @@ class Yireo_RalOption_Helper_Palette1 extends Mage_Core_Helper_Abstract
     /**
      * Helper-method to return the default color (not value)
      *
-     * @parameter null
-     * @return array
+     * @return string
      */
     public function getDefault()
     {
