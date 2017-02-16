@@ -12,7 +12,7 @@
 <config>
     <modules>
         <Yireo_RalOption>
-            <version>0.3.1</version>
+            <version>0.3.2</version>
         </Yireo_RalOption>
     </modules>
 
@@ -21,6 +21,11 @@
             <raloption>
                 <class>Yireo_RalOption_Block</class>
             </raloption>
+            <adminhtml>
+                <rewrite>
+                    <catalog_product_edit_tab_options_option>Yireo_RalOption_Block_Adminhtml_Catalog_Product_Edit_Tab_Options_Option</catalog_product_edit_tab_options_option>
+                </rewrite>
+            </adminhtml>
         </blocks>
 
         <helpers>
@@ -97,13 +102,14 @@
                 <options>
                     <custom>
                         <groups>
-                            <text translate="label" module="adminhtml">
+                            <raloption translate="label" module="adminhtml">
+                                <label>RALoption</label>
                                 <types>
-                                    <ralcolor translate="label" module="adminhtml">
+                                    <ralcolor translate="label" module="raloption">
                                         <label>RALoption Color</label>
                                     </ralcolor>
                                 </types>
-                            </text>
+                            </raloption>
                         </groups>
                     </custom>
                 </options>

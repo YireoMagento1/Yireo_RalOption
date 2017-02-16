@@ -9,6 +9,9 @@
  * @license     Open Source License (OSL v3)
  */
 
+/**
+ * Class Yireo_RalOption_Model_Backend_Source_Sorting
+ */
 class Yireo_RalOption_Model_Backend_Source_Sorting
 {
     /**

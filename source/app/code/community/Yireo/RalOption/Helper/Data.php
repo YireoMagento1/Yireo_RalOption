@@ -209,7 +209,7 @@ class Yireo_RalOption_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * Get the final price for a specific product
      *
-     * @param Mage_Catalog_Model_Product $price
+     * @param Mage_Catalog_Model_Product $product
      *
      * @return string
      */

@@ -8,6 +8,9 @@
  * @license     Open Source License (OSL v3)
  */
 
+/**
+ * Class Yireo_RalOption_Palette_Palette2
+ */
 class Yireo_RalOption_Palette_Palette2 implements Yireo_RalOption_Api_PaletteInterface
 {
     /**

@@ -8,6 +8,9 @@
  * @license     Open Source License (OSL v3)
  */
 
+/**
+ * Interface Yireo_RalOption_Api_PaletteInterface
+ */
 interface Yireo_RalOption_Api_PaletteInterface
 {
     /**
