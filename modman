@@ -9,4 +9,4 @@ source/skin/adminhtml/default/default/images/raloption              skin/adminht
 source/skin/frontend/base/default/js/raloption                      skin/frontend/base/default/js/raloption
 source/skin/frontend/base/default/css/raloption                     skin/frontend/base/default/css/raloption
 source/skin/frontend/base/default/images/raloption                  skin/frontend/base/default/images/raloption
-source/js/raloption                                                 skin/js/raloption
+source/js/raloption                                                 js/raloption
