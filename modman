@@ -3,6 +3,7 @@ source/app/etc/modules/Yireo_RalOption.xml                          app/etc/modu
 source/app/code/community/Yireo/RalOption/                          app/code/community/Yireo/RalOption
 source/app/design/adminhtml/default/default/template/raloption      app/design/adminhtml/default/default/template/raloption
 source/app/design/frontend/base/default/template/raloption          app/design/frontend/base/default/template/raloption
+source/app/design/frontend/base/default/layout/raloption.xml        app/design/frontend/base/default/layout/raloption.xml
 source/skin/adminhtml/default/default/js/raloption                  skin/adminhtml/default/default/js/raloption
 source/skin/adminhtml/default/default/css/raloption                 skin/adminhtml/default/default/css/raloption
 source/skin/adminhtml/default/default/images/raloption              skin/adminhtml/default/default/images/raloption
