@@ -12,7 +12,7 @@
 <config>
     <modules>
         <Yireo_RalOption>
-            <version>0.3.2</version>
+            <version>0.3.3</version>
         </Yireo_RalOption>
     </modules>
 
@@ -72,8 +72,8 @@
                 <observers>
                     <raloption_observer>
                         <type>singleton</type>
-                        <class>Yireo_RalOption_Model_Observer</class>
-                        <method>coreBlockAbstractToHtmlBefore</method>
+                        <class>Yireo_RalOption_Observer_AddOptionBlock</class>
+                        <method>execute</method>
                     </raloption_observer>
                 </observers>
             </core_block_abstract_to_html_before>
@@ -81,8 +81,8 @@
                 <observers>
                     <raloption_observer>
                         <type>singleton</type>
-                        <class>Yireo_RalOption_Model_Observer</class>
-                        <method>coreBlockAbstractToHtmlAfter</method>
+                        <class>Yireo_RalOption_Observer_ReplaceTags</class>
+                        <method>execute</method>
                     </raloption_observer>
                 </observers>
             </core_block_abstract_to_html_after>
@@ -91,7 +91,7 @@
                     <raloption_handle_raloption_pricing>
                         <type>singleton</type>
                         <class>Yireo_RalOption_Observer_Quote_PriceHandler</class>
-                        <method>salesQuoteItemSaveBefore</method>
+                        <method>execute</method>
                     </raloption_handle_raloption_pricing>
                 </observers>
             </sales_quote_item_save_before>

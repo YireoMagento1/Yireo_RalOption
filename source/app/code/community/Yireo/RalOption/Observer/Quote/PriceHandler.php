@@ -30,8 +30,19 @@ class Yireo_RalOption_Observer_Quote_PriceHandler
      * @param Varien_Event_Observer $observer
      *
      * @return $this
+     * @deprecated Use execute() instead
      */
     public function salesQuoteItemSaveBefore(Varien_Event_Observer $observer)
+    {
+        return $this;
+    }
+
+    /**
+     * @param Varien_Event_Observer $observer
+     *
+     * @return $this
+     */
+    public function execute(Varien_Event_Observer $observer)
     {
         $event = $observer->getEvent();
         $quoteItem = $this->getQuoteItemFromEvent($event);

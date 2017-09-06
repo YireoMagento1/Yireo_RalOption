@@ -32,6 +32,25 @@ class Yireo_RalOption_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * @param double $currency
+     * @param bool $showPrefix
+     *
+     * @return string
+     */
+    public function currency($currency, $showPrefix = true)
+    {
+        $prefix = '';
+        if ($showPrefix) {
+            $prefix = ($currency < 0) ? '-' : '+';
+            $currency = abs($currency);
+        }
+
+        /** @var Mage_Core_Helper_Data $coreHelper */
+        $coreHelper = Mage::helper('core');
+        return $prefix . $coreHelper->currency($currency);
+    }
+
+    /**
      * Helper-method to get the opposite-color based on color-contrast
      *
      * @parameter string $color
@@ -79,26 +98,31 @@ class Yireo_RalOption_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * @param $className string
+     * @param $paletteName string
      *
      * @return Yireo_RalOption_Api_PaletteInterface
      * @throws Exception
      */
-    public function getPaletteInstance($className = null)
+    public function getPaletteInstance($paletteName = null)
     {
-        if (empty($className)) {
-            $className = $this->getDefaultPaletteName();
+        if (empty($paletteName)) {
+            $product = $this->getProduct();
+            $paletteName = $product->getRaloptionPalette();
         }
 
-        if (empty($className)) {
+        if (empty($paletteName)) {
+            $paletteName = $this->getDefaultPaletteName();
+        }
+
+        if (empty($paletteName)) {
             throw new Exception('Empty RalOption palette name');
         }
 
-        if (!preg_match('/(\w+)_(\w+)_(\w+)_(\w+)/', $className)) {
-            $className = 'Yireo_RalOption_Palette_' . $className;
+        if (!preg_match('/(\w+)_(\w+)_(\w+)_(\w+)/', $paletteName)) {
+            $paletteName = 'Yireo_RalOption_Palette_' . $paletteName;
         }
 
-        $palette = new $className;
+        $palette = new $paletteName;
 
         if (!$palette instanceof Yireo_RalOption_Api_PaletteInterface) {
             throw new Exception('Unknown RalOption palette');
@@ -138,95 +162,36 @@ class Yireo_RalOption_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Helper-method to get the configured price-rules
+     * Get a specific price for a specific RAL-code
      *
-     * @return array
+     * @param string $code
+     * @param bool $differenceOnly
+     *
+     * @return string
      */
-    public function getPriceRules()
+    public function getPriceByCode($code, $differenceOnly = true)
     {
+        $product = $this->getProduct();
         $palette = $this->getPaletteInstance();
-        return $palette->getPriceRules();
-    }
 
-    /**
-     * Get a specific price for a specific RAL-code
-     *
-     * @param string $code
-     * @param int|Mage_Catalog_Block_Product_Price $originalPrice
-     * @param boolean $differenceOnly
-     *
-     * @return string
-     */
-    public function getPriceByCode($code, $originalPrice, $differenceOnly = true)
-    {
-        if (is_object($originalPrice)) {
-            $originalPrice = $originalPrice->getPrice();
-        }
+        /** @var Yireo_RalOption_Helper_PriceHandler $priceHandler */
+        $priceHandler = Mage::helper('raloption/priceHandler');
+        $priceHandler->setProduct($product)->setPalette($palette);
 
-        $priceRules = $this->getPriceRules();
-        if (empty($priceRules)) {
-            if ($differenceOnly == true) {
-                return 0;
-            } else {
-                return $originalPrice;
-            }
-        }
-
-        $newPrice = ($differenceOnly == false) ? $originalPrice : 0;
-        foreach ($priceRules as $priceCode => $priceRule) {
-            if ($priceCode == $code) {
-                if (isset($priceRule['percentage'])) {
-                    $newPrice = (($originalPrice / 100) * $priceRule['percentage']);
-                    if ($differenceOnly == false) $newPrice = $originalPrice + $newPrice;
-                } elseif (isset($priceRule['fixed'])) {
-                    $newPrice = $priceRule['fixed'];
-                    if ($differenceOnly == false) $newPrice = $originalPrice + $newPrice;
-                } elseif (isset($priceRule['relative'])) {
-                    $newPrice = $priceRule['relative'];
-                    if ($differenceOnly == false) $newPrice = $originalPrice + $newPrice;
-                }
-            }
-        }
-
-        return $newPrice;
-    }
-
-    /**
-     * Get a specific price for a specific RAL-code
-     *
-     * @param string $code
-     * @param Mage_Catalog_Model_Product $product
-     * @param boolean $differenceOnly
-     *
-     * @return string
-     */
-    public function getProductPriceByCode($code, Mage_Catalog_Model_Product $product, $differenceOnly = true)
-    {
-        $price = $this->getProductPrice($product);
-        return $this->getPriceByCode($code, $price, $differenceOnly);
-    }
-
-    /**
-     * Get the final price for a specific product
-     *
-     * @param Mage_Catalog_Model_Product $product
-     *
-     * @return string
-     */
-    public function getProductPrice(Mage_Catalog_Model_Product $product)
-    {
-        $price = $product->getSpecialPrice();
-        if (!empty($price)) {
-            return $price;
-        }
-
-        $price = $product->getFinalPrice();
-        if (!empty($price)) {
-            return $price;
-
-        }
-
-        $price = $product->getPrice();
+        $price = $priceHandler->getPriceByCode($code, $differenceOnly);
         return $price;
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getProduct()
+    {
+        $product = Mage::registry('current_product');
+        if (empty($product)) {
+            throw new InvalidArgumentException('No valid product found');
+        }
+
+        return $product;
     }
 }
