@@ -4,7 +4,7 @@
  *
  * @package     Yireo_RalOption
  * @author      Yireo (https://www.yireo.com/)
- * @copyright   Copyright 2015 Yireo (https://www.yireo.com/)
+ * @copyright   Copyright 2017 Yireo (https://www.yireo.com/)
  * @license     Open Source License (OSL v3)
  */
 
@@ -48,22 +48,20 @@ class Yireo_RalOption_Observer_Quote_PriceHandler
         $quoteItem = $this->getQuoteItemFromEvent($event);
 
         // Loop through the current items options, to detect a RAL-option
-        $ralValue = null;
+        $ralValue = '';
         foreach ($quoteItem->getOptions() as $option) {
-            $ralValue = $this->getRalValueFromOption($option);
+            $ralValue = (string) $this->getRalValueFromOption($option);
             if (!empty($ralValue)) {
                 break;
             }
         }
 
-        // Get the current price
+        /** @var Mage_Catalog_Model_Product $product */
         $product = Mage::getModel('catalog/product')->load($quoteItem->getProduct()->getId());
-        $originalQuoteItemPrice = $quoteItem->getOriginalPrice();
 
         // Search for a modified price with the current RAL-value
-        $newPrice = $this->helper->getProductPriceByCode($ralValue, $product);
-        if ($newPrice != 0) {
-            $newPrice = $originalQuoteItemPrice + $newPrice;
+        $newPrice = $this->helper->setProduct($product)->getPriceByCode($ralValue, false);
+        if ($newPrice > 0) {
             $quoteItem->setOriginalCustomPrice($newPrice);
         }
 

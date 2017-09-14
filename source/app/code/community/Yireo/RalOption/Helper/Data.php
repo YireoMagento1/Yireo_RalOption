@@ -14,6 +14,11 @@
 class Yireo_RalOption_Helper_Data extends Mage_Core_Helper_Abstract
 {
     /**
+     * @var Mage_Catalog_Model_Product
+     */
+    private $product;
+
+    /**
      * Helper-method to fetch a specific value from the Magento Configuration
      *
      * @parameter string $key
@@ -178,7 +183,7 @@ class Yireo_RalOption_Helper_Data extends Mage_Core_Helper_Abstract
         $priceHandler = Mage::helper('raloption/priceHandler');
         $priceHandler->setProduct($product)->setPalette($palette);
 
-        $price = $priceHandler->getPriceByCode($code, $differenceOnly);
+        $price = $priceHandler->getPriceByCode((string) $code, $differenceOnly);
         return $price;
     }
 
@@ -187,11 +192,26 @@ class Yireo_RalOption_Helper_Data extends Mage_Core_Helper_Abstract
      */
     private function getProduct()
     {
-        $product = Mage::registry('current_product');
-        if (empty($product)) {
+        if (!$this->product instanceof Mage_Catalog_Model_Product) {
+            $this->product = Mage::registry('current_product');
+        }
+
+
+        if (!$this->product instanceof Mage_Catalog_Model_Product) {
             throw new InvalidArgumentException('No valid product found');
         }
 
-        return $product;
+        return $this->product;
+    }
+
+    /**
+     * @param Mage_Catalog_Model_Product $product
+     *
+     * @return $this
+     */
+    public function setProduct(Mage_Catalog_Model_Product $product)
+    {
+        $this->product = $product;
+        return $this;
     }
 }
