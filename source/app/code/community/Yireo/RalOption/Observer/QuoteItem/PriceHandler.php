@@ -9,9 +9,9 @@
  */
 
 /**
- * Class Yireo_RalOption_Observer_Quote_PriceHandler
+ * Class Yireo_RalOption_Observer_QuoteItem_PriceHandler
  */
-class Yireo_RalOption_Observer_Quote_PriceHandler
+class Yireo_RalOption_Observer_QuoteItem_PriceHandler
 {
     /**
      * @var Yireo_RalOption_Helper_Data
@@ -47,25 +47,45 @@ class Yireo_RalOption_Observer_Quote_PriceHandler
         $event = $observer->getEvent();
         $quoteItem = $this->getQuoteItemFromEvent($event);
 
-        // Loop through the current items options, to detect a RAL-option
-        $ralValue = '';
-        foreach ($quoteItem->getOptions() as $option) {
-            $ralValue = (string) $this->getRalValueFromOption($option);
-            if (!empty($ralValue)) {
-                break;
-            }
-        }
+        $ralValue = $this->getRalValueFromOptions($quoteItem);
 
         /** @var Mage_Catalog_Model_Product $product */
         $product = Mage::getModel('catalog/product')->load($quoteItem->getProduct()->getId());
 
-        // Search for a modified price with the current RAL-value
-        $newPrice = $this->helper->setProduct($product)->getPriceByCode($ralValue, false);
-        if ($newPrice > 0) {
-            $quoteItem->setOriginalCustomPrice($newPrice);
+        $newPrice = $this->helper->setProduct($product)->getPriceByCode($ralValue, true);
+        if ($newPrice !== 0) {
+            $this->updateQuoteItemPrice($quoteItem, $newPrice);
         }
 
         return $this;
+    }
+
+    /**
+     * @param Mage_Sales_Model_Quote_Item $quoteItem
+     * @param $newPrice
+     * @return bool
+     */
+    protected function updateQuoteItemPrice(Mage_Sales_Model_Quote_Item $quoteItem, $newPrice)
+    {
+        $originalPrice = $quoteItem->getOriginalPrice();
+        $quoteItem->setOriginalCustomPrice($originalPrice + $newPrice);
+        return true;
+    }
+
+    /**
+     * @param Mage_Sales_Model_Quote_Item $quoteItem
+     * @return string
+     */
+    private function getRalValueFromOptions(Mage_Sales_Model_Quote_Item $quoteItem)
+    {
+        foreach ($quoteItem->getOptions() as $option) {
+            $ralValue = (string) $this->getRalValueFromOption($option);
+            if (!empty($ralValue)) {
+                return $ralValue;
+            }
+        }
+
+        return '';
     }
 
     /**
@@ -73,7 +93,7 @@ class Yireo_RalOption_Observer_Quote_PriceHandler
      *
      * @return string
      */
-    protected function getRalValueFromOption(Mage_Sales_Model_Quote_Item_Option $option)
+    private function getRalValueFromOption(Mage_Sales_Model_Quote_Item_Option $option)
     {
         $optionId = $this->getOptionIdFromOption($option);
 
@@ -96,7 +116,7 @@ class Yireo_RalOption_Observer_Quote_PriceHandler
      *
      * @return int
      */
-    protected function getOptionIdFromOption($option)
+    private function getOptionIdFromOption($option)
     {
         return (int)preg_replace('/^option_/', '', $option->getData('code'));
     }
@@ -106,7 +126,7 @@ class Yireo_RalOption_Observer_Quote_PriceHandler
      *
      * @return bool
      */
-    protected function isRalOption(Varien_Object $option)
+    private function isRalOption(Varien_Object $option)
     {
         if (preg_match('/\{\{RAL([^\}]{0,})\}\}/', $option->getData('title'))) {
             return true;
@@ -124,9 +144,10 @@ class Yireo_RalOption_Observer_Quote_PriceHandler
      *
      * @return Mage_Sales_Model_Quote_Item
      */
-    protected function getQuoteItemFromEvent(Varien_Event $event)
+    private function getQuoteItemFromEvent(Varien_Event $event)
     {
         $quoteItem = $event->getDataObject();
+
         if (!empty($quoteItem)) {
             return $quoteItem;
         }

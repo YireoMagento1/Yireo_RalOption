@@ -123,4 +123,56 @@ class Yireo_RalOption_Helper_PriceHandler
         $price = $this->product->getPrice();
         return $price;
     }
+
+    /**
+     * @param Mage_Sales_Model_Quote_Item_Option $option
+     *
+     * @return string
+     */
+    public function getRalValueFromOption(Mage_Sales_Model_Quote_Item_Option $option)
+    {
+        $optionId = $this->getOptionIdFromOption($option);
+
+        /** @var Mage_Catalog_Model_Product $product */
+        $product = $option->getProduct();
+
+        // Loop through the configured product-options to match this option
+        foreach ($product->getOptions() as $productOption) {
+            /** @var Varien_Object $productOption */
+            if ($productOption->getData('option_id') == $optionId && $this->isRalOption($productOption)) {
+                return $option->getData('value');
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * @param Varien_Object $option
+     *
+     * @return int
+     */
+    private function getOptionIdFromOption($option)
+    {
+        return (int)preg_replace('/^option_/', '', $option->getData('code'));
+    }
+
+
+    /**
+     * @param Varien_Object $option
+     *
+     * @return bool
+     */
+    private function isRalOption(Varien_Object $option)
+    {
+        if (preg_match('/\{\{RAL([^\}]{0,})\}\}/', $option->getData('title'))) {
+            return true;
+        }
+
+        if ($option->getData('type') === 'ralcolor') {
+            return true;
+        }
+
+        return false;
+    }
 }
