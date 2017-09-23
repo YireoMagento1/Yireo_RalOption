@@ -73,7 +73,7 @@ class Yireo_RalOption_Helper_PriceHandler
         $newPrice = ($differenceOnly === false) ? $originalPrice : 0;
 
         foreach ($priceRules as $priceCode => $priceRule) {
-            if ($priceCode !== $code) {
+            if ((string) $priceCode !== $code) {
                 continue;
             }
 
