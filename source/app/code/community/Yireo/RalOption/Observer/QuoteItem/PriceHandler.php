@@ -68,6 +68,7 @@ class Yireo_RalOption_Observer_QuoteItem_PriceHandler
     protected function updateQuoteItemPrice(Mage_Sales_Model_Quote_Item $quoteItem, $newPrice)
     {
         $originalPrice = $quoteItem->getOriginalPrice();
+        $quoteItem->setCustomPrice($originalPrice + $newPrice);
         $quoteItem->setOriginalCustomPrice($originalPrice + $newPrice);
         return true;
     }
@@ -147,12 +148,16 @@ class Yireo_RalOption_Observer_QuoteItem_PriceHandler
     private function getQuoteItemFromEvent(Varien_Event $event)
     {
         $quoteItem = $event->getDataObject();
-
         if (!empty($quoteItem)) {
             return $quoteItem;
         }
 
         $quoteItem = $event->getObject();
+        if (!empty($quoteItem)) {
+            return $quoteItem;
+        }
+
+        $quoteItem = $event->getQuoteItem();
         return $quoteItem;
     }
 }
