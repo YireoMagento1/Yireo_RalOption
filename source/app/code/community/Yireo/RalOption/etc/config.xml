@@ -12,7 +12,7 @@
 <config>
     <modules>
         <Yireo_RalOption>
-            <version>0.3.6</version>
+            <version>0.3.7</version>
         </Yireo_RalOption>
     </modules>
 
@@ -86,6 +86,15 @@
                     </raloption_observer>
                 </observers>
             </core_block_abstract_to_html_after>
+            <checkout_cart_add_product_complete>
+                <observers>
+                    <raloption_handle_quoteitem_raloption_pricing>
+                        <type>singleton</type>
+                        <class>Yireo_RalOption_Observer_QuoteItem_PriceHandler</class>
+                        <method>execute</method>
+                    </raloption_handle_quoteitem_raloption_pricing>
+                </observers>
+            </checkout_cart_add_product_complete>
             <sales_quote_item_save_before>
                 <observers>
                     <raloption_handle_quoteitem_raloption_pricing>

@@ -30,17 +30,6 @@ class Yireo_RalOption_Observer_QuoteItem_PriceHandler
      * @param Varien_Event_Observer $observer
      *
      * @return $this
-     * @deprecated Use execute() instead
-     */
-    public function salesQuoteItemSaveBefore(Varien_Event_Observer $observer)
-    {
-        return $this;
-    }
-
-    /**
-     * @param Varien_Event_Observer $observer
-     *
-     * @return $this
      */
     public function execute(Varien_Event_Observer $observer)
     {
@@ -48,6 +37,9 @@ class Yireo_RalOption_Observer_QuoteItem_PriceHandler
         $quoteItem = $this->getQuoteItemFromEvent($event);
 
         $ralValue = $this->getRalValueFromOptions($quoteItem);
+        if (empty($ralValue)) {
+            return $this;
+        }
 
         /** @var Mage_Catalog_Model_Product $product */
         $product = Mage::getModel('catalog/product')->load($quoteItem->getProduct()->getId());
@@ -57,17 +49,35 @@ class Yireo_RalOption_Observer_QuoteItem_PriceHandler
             $this->updateQuoteItemPrice($quoteItem, $newPrice);
         }
 
+        if ($quoteItem->getRalOptionUpdateCart()) {
+            $quoteItem->setRalOptionUpdateCart(false);
+            $quote = $this->getQuote();
+            $quote->setTotalsCollectedFlag(false);
+            $quote->collectTotals();
+            $quote->save();
+        }
+
         return $this;
     }
 
     /**
      * @param Mage_Sales_Model_Quote_Item $quoteItem
      * @param $newPrice
+     *
      * @return bool
+     * @throws Exception
      */
     protected function updateQuoteItemPrice(Mage_Sales_Model_Quote_Item $quoteItem, $newPrice)
     {
         $originalPrice = $quoteItem->getOriginalPrice();
+        if (empty($originalPrice)) {
+            $originalPrice = $quoteItem->getCalculationPrice();
+        }
+
+        if (empty($originalPrice)) {
+            throw new Exception('Could not locate original price');
+        }
+
         $quoteItem->setCustomPrice($originalPrice + $newPrice);
         $quoteItem->setOriginalCustomPrice($originalPrice + $newPrice);
         return true;
@@ -75,12 +85,13 @@ class Yireo_RalOption_Observer_QuoteItem_PriceHandler
 
     /**
      * @param Mage_Sales_Model_Quote_Item $quoteItem
+     *
      * @return string
      */
     private function getRalValueFromOptions(Mage_Sales_Model_Quote_Item $quoteItem)
     {
         foreach ($quoteItem->getOptions() as $option) {
-            $ralValue = (string) $this->getRalValueFromOption($option);
+            $ralValue = (string)$this->getRalValueFromOption($option);
             if (!empty($ralValue)) {
                 return $ralValue;
             }
@@ -144,20 +155,34 @@ class Yireo_RalOption_Observer_QuoteItem_PriceHandler
      * @param Varien_Event $event
      *
      * @return Mage_Sales_Model_Quote_Item
+     * @throws Exception
      */
     private function getQuoteItemFromEvent(Varien_Event $event)
     {
         $quoteItem = $event->getDataObject();
-        if (!empty($quoteItem)) {
+        if ($quoteItem instanceof Mage_Sales_Model_Quote_Item) {
             return $quoteItem;
         }
 
-        $quoteItem = $event->getObject();
-        if (!empty($quoteItem)) {
+        $quote = $this->getQuote();
+        $product = $event->getProduct();
+        $quoteItem = $quote->getItemByProduct($product);
+        if ($quoteItem instanceof Mage_Sales_Model_Quote_Item) {
+            $quoteItem->setRalOptionUpdateCart(true);
             return $quoteItem;
         }
 
-        $quoteItem = $event->getQuoteItem();
-        return $quoteItem;
+        $data = $event->getData();
+        throw new Exception('Could not locate quote item: ' . implode(',', array_keys($data)));
+    }
+
+    /**
+     * @return Mage_Sales_Model_Quote
+     */
+    private function getQuote()
+    {
+        /** @var Mage_Checkout_Model_Cart $cart */
+        $cart = Mage::getModel('checkout/cart');
+        return $cart->getQuote();
     }
 }
