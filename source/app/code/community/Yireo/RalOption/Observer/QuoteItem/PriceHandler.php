@@ -62,13 +62,16 @@ class Yireo_RalOption_Observer_QuoteItem_PriceHandler
 
     /**
      * @param Mage_Sales_Model_Quote_Item $quoteItem
-     * @param $newPrice
+     * @param $priceDiference
      * @return bool
      */
-    protected function updateQuoteItemPrice(Mage_Sales_Model_Quote_Item $quoteItem, $newPrice)
+    protected function updateQuoteItemPrice(Mage_Sales_Model_Quote_Item $quoteItem, $priceDiference)
     {
         $originalPrice = $quoteItem->getOriginalPrice();
-        $quoteItem->setOriginalCustomPrice($originalPrice + $newPrice);
+        $newPrice = $originalPrice + $priceDiference;
+        $quoteItem->setOriginalCustomPrice($newPrice);
+        //$quoteItem->setCustomPrice($newPrice);
+
         return true;
     }
 
@@ -146,13 +149,21 @@ class Yireo_RalOption_Observer_QuoteItem_PriceHandler
      */
     private function getQuoteItemFromEvent(Varien_Event $event)
     {
-        $quoteItem = $event->getDataObject();
+        $quoteItem = $event->getQuoteItem();
+        if ($quoteItem instanceof Mage_Sales_Model_Quote_Item) {
+            return $quoteItem;
+        }
 
-        if (!empty($quoteItem)) {
+        $quoteItem = $event->getDataObject();
+        if ($quoteItem instanceof Mage_Sales_Model_Quote_Item) {
             return $quoteItem;
         }
 
         $quoteItem = $event->getObject();
-        return $quoteItem;
+        if ($quoteItem instanceof Mage_Sales_Model_Quote_Item) {
+            return $quoteItem;
+        }
+
+        throw new Yireo_RalOption_Exception_RuntimeException('No valid quote item found');
     }
 }
