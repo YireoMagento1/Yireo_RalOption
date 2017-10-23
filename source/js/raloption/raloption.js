@@ -65,9 +65,14 @@ var RalOption = (function () {
      * @param price
      */
     var setProductPrice = function (price) {
+        if (typeof optionsPrice === 'undefined') {
+            return false;
+        }
+
         optionsPrice.changePrice('price', price);
         optionsPrice.changePrice('oldPrice', '0');
         optionsPrice.reload();
+        return true;
     };
 
     var debug = function (string) {

@@ -16,7 +16,7 @@ class Yireo_RalOption_Observer_AddOptionBlock
     /**
      * @var Yireo_RalOption_Helper_Data
      */
-    protected $helper;
+    private $helper;
 
     /**
      * Yireo_RalOption_Model_Observer constructor.

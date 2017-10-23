@@ -68,28 +68,34 @@
         </resources>
 
         <events>
+            <controller_action_layout_load_before>
+                <observers>
+                    <raloption_add_layout_handle>
+                        <class>Yireo_RalOption_Observer_AddLayoutHandle</class>
+                        <method>execute</method>
+                    </raloption_add_layout_handle>
+                </observers>
+            </controller_action_layout_load_before>
             <core_block_abstract_to_html_before>
                 <observers>
-                    <raloption_observer>
+                    <raloption_add_option_block>
                         <type>singleton</type>
                         <class>Yireo_RalOption_Observer_AddOptionBlock</class>
                         <method>execute</method>
-                    </raloption_observer>
+                    </raloption_add_option_block>
                 </observers>
             </core_block_abstract_to_html_before>
             <core_block_abstract_to_html_after>
                 <observers>
-                    <raloption_observer>
-                        <type>singleton</type>
+                    <raloption_replace_tags>
                         <class>Yireo_RalOption_Observer_ReplaceTags</class>
                         <method>execute</method>
-                    </raloption_observer>
+                    </raloption_replace_tags>
                 </observers>
             </core_block_abstract_to_html_after>
             <checkout_cart_add_product_complete>
                 <observers>
                     <raloption_handle_quoteitem_raloption_pricing>
-                        <type>singleton</type>
                         <class>Yireo_RalOption_Observer_QuoteItem_PriceHandler</class>
                         <method>execute</method>
                     </raloption_handle_quoteitem_raloption_pricing>
@@ -98,7 +104,6 @@
             <sales_quote_item_save_before>
                 <observers>
                     <raloption_handle_quoteitem_raloption_pricing>
-                        <type>singleton</type>
                         <class>Yireo_RalOption_Observer_QuoteItem_PriceHandler</class>
                         <method>execute</method>
                     </raloption_handle_quoteitem_raloption_pricing>
@@ -111,7 +116,7 @@
                 <options>
                     <custom>
                         <groups>
-                            <raloption translate="label" module="adminhtml">
+                            <raloption translate="label" module="raloption">
                                 <label>RALoption</label>
                                 <types>
                                     <ralcolor translate="label" module="raloption">
@@ -165,6 +170,13 @@
                 </admin>
             </resources>
         </acl>
+        <layout>
+            <updates>
+                <raloption>
+                    <file>raloption.xml</file>
+                </raloption>
+            </updates>
+        </layout>
     </adminhtml>
 
     <default>

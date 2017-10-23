@@ -62,12 +62,12 @@ class Yireo_RalOption_Observer_QuoteItem_PriceHandler
 
     /**
      * @param Mage_Sales_Model_Quote_Item $quoteItem
-     * @param $priceDiference
+     * @param bool $priceDifference
      *
      * @return bool
      * @throws Exception
      */
-    protected function updateQuoteItemPrice(Mage_Sales_Model_Quote_Item $quoteItem, $priceDiference)
+    protected function updateQuoteItemPrice(Mage_Sales_Model_Quote_Item $quoteItem, $priceDifference)
     {
         $originalPrice = $quoteItem->getOriginalPrice();
 
@@ -79,8 +79,8 @@ class Yireo_RalOption_Observer_QuoteItem_PriceHandler
             throw new Exception('Could not locate original price');
         }
 
-        $quoteItem->setCustomPrice($originalPrice + $newPrice);
-        $quoteItem->setOriginalCustomPrice($originalPrice + $newPrice);
+        $quoteItem->setCustomPrice($originalPrice + $priceDifference);
+        $quoteItem->setOriginalCustomPrice($originalPrice + $priceDifference);
         return true;
     }
 
