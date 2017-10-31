@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<layout>
+    <raloption> 
+        <reference name="head">
+            <action method="addCss"><stylesheet>css/raloption/common.css</stylesheet></action>
+            <action method="addCss"><stylesheet>css/raloption/jquery.fancybox.css</stylesheet></action>
+            <action method="addCss"><stylesheet>css/raloption/jquery.fancybox-buttons.css</stylesheet></action>
+            <action method="addJs"><script>raloption/jquery.js</script></action>
+            <action method="addJs"><script>raloption/raloption.js</script></action>
+            <action method="addItem"><type>skin_js</type><script>js/raloption/jquery.fancybox.pack.js</script></action>
+            <action method="addItem"><type>skin_js</type><script>js/raloption/jquery.fancybox-buttons.js</script></action>
+        </reference>
+    </raloption> 
+</layout>
