@@ -33,6 +33,7 @@ $defaultPrice = $helper->getPriceByCode($defaultValue);
 <dd<?php if ($option->decoratedIsLast): ?> class="last"<?php endif; ?>>
     <div class="input-box raloption-input-box">
         <?php $classes = array(); ?>
+        <?php $classes[] = 'validate-ralcode'; ?>
         <?php $classes[] = 'product-custom-option'; ?>
         <?php if ($option->getIsRequire()) $classes[] = 'required-entry'; ?>
         <a href="#" class="raloption-link-<?= $optionId ?>" data-modal="#raloption-colorpicker-<?= $optionId; ?>">
@@ -87,11 +88,20 @@ $defaultPrice = $helper->getPriceByCode($defaultValue);
     var ralCodes = [ <?= implode(', ', $ralCodesArray); ?> ];
     RalOption.setCodes(ralCodes);
 
+    Validation.add('validate-ralcode', 'Please enter a valid color.', function (value) {
+        var count = ralCodes.length;
+        for (var i = 0; i < count; i++) {
+            if (ralCodes[i] === value) {
+                return true;
+            }
+        }
+
+        return false;
+    });
+
     (function ($) {
         RalOption.change('<?= $defaultValue; ?>', '<?= $defaultColor; ?>', '<?= $defaultPrice; ?>', '<?= $optionId ?>');
         $(".fancybox").fancybox({'openSpeed': 200, 'closeSpeed': 200});
-
-
         $(".raloption-box").click(function (event) {
             $currentElement = $(event.target);
 
@@ -103,14 +113,12 @@ $defaultPrice = $helper->getPriceByCode($defaultValue);
             color = $currentElement.attr('data-raloption-color');
             price = $currentElement.attr('data-raloption-price');
             optionId = $currentElement.attr('data-raloption-optionId');
-
             RalOption.change(code, color, price, optionId);
         });
 
         $("#raloption-button-<?= $optionId ?>").click(function (e) {
             $currentElement = $(e.target);
             modalTarget = RalOptionGetModalFromElement($currentElement, 'button');
-
             jQuery.fancybox.open([{href: '#' + modalTarget}]);
         });
 
